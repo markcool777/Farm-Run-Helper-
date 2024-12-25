@@ -1,0 +1,96 @@
+private void defineFarmRunLocations() {
+        farmLocations.put("Herb Run", new WorldPoint[]{
+                new WorldPoint(2813, 3463, 0), // Falador
+                new WorldPoint(3056, 3311, 0), // Ardougne
+                new WorldPoint(3597, 3523, 0), // Catherby
+                new WorldPoint(2935, 3225, 0), // Morytania
+                // Add additional herb patches as needed
+        });
+
+        farmLocations.put("Tree Run", new WorldPoint[]{
+                new WorldPoint(3183, 3233, 0), // Lumbridge
+                new WorldPoint(2446, 3183, 0), // Taverley
+                new WorldPoint(2461, 3404, 0), // Falador Park
+                new WorldPoint(3344, 3469, 0), // Tree Gnome Stronghold
+                new WorldPoint(2457, 3229, 0), // Varrock Castle
+                // Add additional tree patches as needed
+        });
+
+        farmLocations.put("Hardwood Run", new WorldPoint[]{
+                new WorldPoint(3702, 3826, 0), // Hardwood Grove
+                // Add additional hardwood tree patches as needed
+        });
+    }
+
+
+    Spirit Tree to Tree Gnome Stronghold, plant fruit tree and normal tree
+
+    Spirit Tree to Tree Gnome Village, follow Elkoy to patch, plant fruit tree
+
+    Elf crystal to Lletya, plant fruit tree
+
+    Fair ring to Tai Bo Wannai, run north to calquat patch, plant calquat
+
+    Run north to Brimhaven, plant fruit tree
+
+    Charter ship to Catherby, plant fruit tree
+
+    teleport to Lumbridge, West of Lumbridge Castle
+
+    teleport to Varrock, Varrock Castle courtyard
+
+    Teleport to Falador, Falador Park
+
+    Run north and use agility shortcut in the wall if available to Taverley patch
+
+    Skills necklace to farming guild, plant fruit tree lvl 65 and at lvl 85 farming normal tree and fight Hespori
+
+
+    @Override
+        public Dimension render(Graphics2D graphics) {
+            if (!plugin.isOverlayVisible()) {
+                return null; // If the overlay is not visible, do not render
+            }
+
+            // Get current run type and locations
+            String currentRunType = plugin.getCurrentRunType();
+            WorldPoint[] locations = plugin.getFarmLocations().get(currentRunType);
+            String firstStep = (locations != null && locations.length > 0) ? "Go to: " + locations[0].toString() : "N/A";
+            String[] overlayText = {
+                    "Run: " + currentRunType,
+                    "First Step: " + firstStep
+            };
+
+            // Get the draggable box bounds
+            Rectangle bounds = getBounds();
+            if (bounds == null) {
+                return null; // No bounds means no rendering
+            }
+
+            // Get position and dimensions from draggable bounds
+            int boxX = bounds.x;
+            int boxY = bounds.y;
+            int boxWidth = 200; // Example fixed width
+            FontMetrics metrics = graphics.getFontMetrics();
+            int lineHeight = metrics.getHeight();
+            int boxHeight = lineHeight * overlayText.length + 10; // Calculate height dynamically
+
+            // Draw semi-transparent background
+            graphics.setColor(new Color(0, 0, 0, 150)); // Semi-transparent black
+            graphics.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+            // Draw border
+            graphics.setColor(Color.WHITE);
+            graphics.drawRect(boxX, boxY, boxWidth, boxHeight);
+
+            // Draw each line of text
+            int textY = boxY + lineHeight; // Start at the top of the box
+            for (String line : overlayText) {
+                int textX = boxX + (boxWidth - metrics.stringWidth(line)) / 2; // Center each line
+                graphics.drawString(line, textX, textY);
+                textY += lineHeight; // Move to the next line
+            }
+
+            // Return the box dimensions
+            return new Dimension(boxWidth, boxHeight);
+        }
